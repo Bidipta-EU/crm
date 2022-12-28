@@ -40,6 +40,13 @@ import Competition from "./Pages/KYS/Competition";
 import AddWorkShop from "./Pages/KYS/AddWorkShop";
 import Workshop from "./Pages/KYS/Workshop";
 import PageNotFound from "./Pages/PageNotFound";
+import Test from "./Pages/Test"
+import UpdateTest from "./Pages/UpdateTest";
+
+import Return from './Pages/RETURN/Return'
+import ReturnRequest from './Pages/RETURN/RequestReturn'
+
+
 
 function App() {
   const isAuth = useSelector((state) => state.auth.user);
@@ -82,6 +89,25 @@ function App() {
             path="/opportunities"
             element={isAuth || MsAuth ? <Opportunities /> : <Login />}
           /> */}
+
+
+          <Route
+            path="/test"
+            element={isAuth || MsAuth ? <Test/> : <Login />}
+          />
+
+          <Route
+            path="/return"
+            element={isAuth || MsAuth ? <Return /> : <Login />}
+          />
+
+
+           <Route
+            path="/return_request"
+            element={isAuth || MsAuth ? <ReturnRequest /> : <Login />}
+          />
+
+
           <Route
             path="/manageSchool"
             element={isAuth || MsAuth ? <ManageSchool /> : <Login />}
@@ -105,6 +131,12 @@ function App() {
           <Route
             path="/update_school/:id"
             element={isAuth || MsAuth ? <UpdateSchool /> : <Login />}
+          />
+
+
+          <Route
+            path="/update_test/:id"
+            element={isAuth || MsAuth ? <UpdateTest /> : <Login />}
           />
 
           <Route

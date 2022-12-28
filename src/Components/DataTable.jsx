@@ -94,6 +94,23 @@ export default function DataTable({
             row?.Address?.toLowerCase().indexOf(q) > -1
           );
           break;
+          case "Test":
+            return (
+              row?.SchoolName?.toLowerCase().indexOf(q) > -1 ||
+              // row.City.toLowerCase().indexOf(q) > -1 ||
+              row?.State?.toLowerCase().indexOf(q) > -1 ||
+              row?.Address?.toLowerCase().indexOf(q) > -1
+            );
+          break;
+
+          case "ReturnOrder":
+            return (
+              row?.Customer?.toLowerCase().indexOf(q) > -1 ||
+              // row.City.toLowerCase().indexOf(q) > -1 ||
+              row?.Quantity?.toLowerCase().indexOf(q) > -1 ||
+              row?.Status?.toLowerCase().indexOf(q) > -1
+            );
+            break;
         default:
           break;
       }
@@ -104,6 +121,9 @@ export default function DataTable({
     switch (tableName) {
       case "ManageSchool":
         navigate(`/update_school/${value[0]}`);
+        break;
+      case "Test":
+        navigate(`/update_test/${value[0]}`);
         break;
       case "Tagging":
         // console.log('hi')

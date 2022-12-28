@@ -120,7 +120,6 @@ const UpdateSchool = () => {
     // },
     onSubmit: async (values) => {
       setLoading(true);
-      console.log("first submit")
       const res = await instance({
         url: `school/update/${id}`,
         method: "PUT",
@@ -593,12 +592,13 @@ const UpdateSchool = () => {
               Update School
             </h1>
             <div className="w-full flex flex-col gap-4 items-center mt-[7rem]">
-              <CustomizedSteppers
+              {/* <CustomizedSteppers
                 activeStep={calActiceStep()}
                 steps={["Basic Details", "Contact Details", "Address Details"]}
-              />
+              /> */}
+              
               {/* step 1 */}
-              {steps.step1 ? (
+              {/* {steps.step1 ? ( */}
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
                   <div className="grid sm:grid-rows-2 sm:grid-cols-2 grid-rows-4 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
                     <TextField
@@ -684,12 +684,16 @@ const UpdateSchool = () => {
                       });
                     }}
                   >
-                    <BasicButton text={"Next"} />
+                   <div className="mt-3" onClick={formik.handleSubmit}>
+                    <BasicButton text={"Submit"} />
+                  </div>
+                    {/* <BasicButton text={"Submit"} /> */}
                   </div>
                 </div>
-              ) : null}
+              {/* ) : null} */}
+
               {/* step 2 */}
-              {steps.step2 ? (
+              {/* {steps.step2 ? (
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
                   <div className="grid sm:grid-rows-2 sm:grid-cols-3 grid-rows-5 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
                     <TextField
@@ -782,9 +786,9 @@ const UpdateSchool = () => {
                     <BasicButton text={"Next"} />
                   </div>
                 </div>
-              ) : null}
+              ) : null} */}
               {/* step 3 */}
-              {steps.step3 ? (
+              {/* {steps.step3 ? (
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
                   <div className="grid sm:grid-rows-2 sm:grid-cols-3 grid-rows-4 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
                     <Autocomplete
@@ -861,7 +865,7 @@ const UpdateSchool = () => {
                     <BasicButton text={"Update School"} />
                   </div>
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </div>

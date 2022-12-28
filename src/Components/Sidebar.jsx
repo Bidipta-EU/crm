@@ -12,6 +12,8 @@ import {
   ShoppingBag,
   ListAlt,
   LocationCity,
+  BugReport,
+  AssignmentReturnOutlined
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import logoLight from "../assets/img/logo-light-icon.png";
@@ -494,6 +496,34 @@ const Sidebar = ({ sidebarCollapsed, highLight, show }) => {
             </span>
           </aside>
         </Link>
+
+
+        {/* <Link to="/test">
+          <aside
+            className={`px-6 py-2 flex gap-4 ${
+              highLight === "test" ? "bg-gray-500" : ""
+            } cursor-pointer group hover:bg-gray-500 rounded-md transition-all duration-150 ease-linear`}
+          >
+            <BugReport
+              className={`${
+                highLight === "test"
+                  ? "!text-[#659DBD]"
+                  : "!text-gray-400"
+              } group-hover:!text-[#659DBD] !transition-all !duration-150 !ease-linear`}
+            />
+            <span
+              className={`${
+                highLight === "test" ? "text-gray-200" : "text-gray-400"
+              } group-hover:!text-gray-100 transition-all duration-150 ease-linear`}
+            >
+              Test
+            </span>
+          </aside>
+        </Link> */}
+
+
+
+
         {/* <Link to="/aof">
           <aside
             className={`px-6 py-2 flex gap-4 ${
@@ -534,6 +564,29 @@ const Sidebar = ({ sidebarCollapsed, highLight, show }) => {
             </span>
           </aside>
         </Link>
+
+
+        <Link to="/return">
+          <aside
+            className={`px-6 py-2 flex gap-4 ${
+              highLight === "return" ? "bg-gray-500" : ""
+            } cursor-pointer group hover:bg-gray-500 rounded-md transition-all duration-150 ease-linear`}
+          >
+            <AssignmentReturnOutlined
+              className={`${
+                highLight === "return" ? "!text-[#659DBD]" : "!text-gray-400"
+              } group-hover:!text-[#659DBD] !transition-all !duration-150 !ease-linear`}
+            />
+            <span
+              className={`${
+                highLight === "return" ? "text-gray-200" : "text-gray-400"
+              } group-hover:!text-gray-100 transition-all duration-150 ease-linear`}
+            >
+              RETURN
+            </span>
+          </aside>
+        </Link>
+
       </div>
     </div>
   );
