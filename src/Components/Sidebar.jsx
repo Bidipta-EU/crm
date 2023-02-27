@@ -185,7 +185,7 @@ const Sidebar = ({ sidebarCollapsed, highLight, show }) => {
           </aside>
         </Link>
 
-        <Link to="/ck_school_training">
+  <Link to="/ck_school_training">
           <aside
             className={`px-6 py-2 flex gap-4 cursor-pointer ${
               highLight === "ckSchool" ? "bg-gray-500" : ""

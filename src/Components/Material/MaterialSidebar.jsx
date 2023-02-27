@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import logoLight from "../../assets/img/logo-light-icon.png";
 import { useState } from "react";
 import {
+  Place,
   AccountBalance,
   Circle,
   Dashboard,
@@ -480,7 +481,7 @@ const SwipeableTemporaryDrawer = React.forwardRef((props, ref) => {
             highLight === "location" ? "bg-gray-500" : ""
           } cursor-pointer group hover:bg-gray-500 rounded-md transition-all duration-150 ease-linear`}
         >
-          <ReceiptOutlined
+          <Place
             className={`${
               highLight === "location" ? "!text-[#659DBD]" : "!text-gray-400"
             } group-hover:!text-[#659DBD] !transition-all !duration-150 !ease-linear`}

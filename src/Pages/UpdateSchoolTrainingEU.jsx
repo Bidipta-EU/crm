@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "../Components/Navbar";
 import Sidebar from "../Components/Sidebar";
@@ -15,29 +16,29 @@ import instance from "../Instance";
 import ControlledSearchDropDown from "../Components/Material/ControlledSearchDropDown";
 import Snackbars from "../Components/Material/SnackBar";
 
-const AddSchoolTraining = () => {
+const UpdateSchoolTrainingEU = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [stateId, setStateId] = useState(null);
   const [boards, setBoards] = useState(null);
   const [category, setCategory] = useState(null);
   const [values, setValues] = useState({ stateId: "" });
   const [errMessage, setErrMessage] = useState("");
   const [snackbarErrStatus, setSnackbarErrStatus] = useState(true);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
-  const [schoolType, setSchoolType] = useState("");
+  const [state, setState] = useState(null);
+  const [city, setCity] = useState(null);
   const [steps, setSteps] = useState({
-    step1: true,
-    step2: false,
+    // step1: true,
+    step2: true,
     step3: false,
     step4: false,
   });
-  const [ckSchoolCode, setCkSchoolCode] = useState("")
   const sidebarRef = useRef();
   const snackbarRef = useRef();
 
   const show = null;
+
+  let { scid } = useParams();
+  let { stid } = useParams();
 
   const formik = useFormik({
     initialValues: {
@@ -152,31 +153,30 @@ const AddSchoolTraining = () => {
   });
 
   const calActiceStep = () => {
-    if (steps.step1) {
+    if (steps.step2) {
       return 0;
     }
-    if (steps.step2) {
+    if (steps.step3) {
       // console.log(formik.values.school_name)
       return 1;
     }
-    if (steps.step3) {
+    if (steps.step4) {
       // console.log(formik.values.school_signatory_name)
       // console.log(formik.values.school_signatory_designation)
       // console.log(formik.values.school_signatory_mobile)
       // console.log(formik.values.school_signatory_email)
       return 2;
     }
-    if (steps.step4) {
-      // console.log(formik.values.school_service_name)
-      // console.log(formik.values.school_service_designation)
-      // console.log(formik.values.school_service_mobile)
-      // console.log(formik.values.school_service_email)
-      return 3;
-    }
+    // if (steps.step4) {
+    // console.log(formik.values.school_service_name)
+    // console.log(formik.values.school_service_designation)
+    // console.log(formik.values.school_service_mobile)
+    // console.log(formik.values.school_service_email)
+    // return 3;
+    // }
   };
 
   const handleOrderProcessingForm = async (value, type) => {
-    // console.log(value, type);
     switch (type) {
       // step 1
       case "board_name_addschool":
@@ -188,52 +188,54 @@ const AddSchoolTraining = () => {
       case "Enter School Name *":
         formik.values.school_name = value;
         break;
-      case "School Signatory Full Name *":
+      case "School Signatory Full Name":
         formik.values.school_signatory_name = value;
         break;
       // step 2
-      case "School Signatory Designation *":
+      case "School Signatory Designation":
         formik.values.school_signatory_designation = value;
         break;
-      case "School Signatory Mobile Number *":
+      case "School Signatory Mobile Number":
         formik.values.school_signatory_mobile = value;
         break;
-      case "School Signatory Email ID *":
+      case "School Signatory Email ID":
         formik.values.school_signatory_email = value;
         break;
-      case "School Service Person Full Name *":
+      case "School Service Person Full Name":
         formik.values.school_service_name = value;
         break;
       // step 2
-      case "School Service Person Designation *":
+      case "School Service Person Designation":
         formik.values.school_service_designation = value;
         break;
-      case "School Service Person Mobile Number *":
+      case "School Service Person Mobile Number":
         formik.values.school_service_mobile = value;
         break;
-      case "School Service Person Email ID *":
+      case "School Service Person Email ID":
         formik.values.school_service_email = value;
         break;
-      case "School Address *":
+      case "School Address":
         // console.log(value)
         formik.values.school_address = value;
         break;
-      case "School City *":
+      case "School City":
         // console.log(value)
         formik.values.school_city = value;
         break;
-      case "School State *":
-        // console.log(value.id);
-        formik.values.school_state = value.id;
+      case "School State":
+        // console.log(value)
+        formik.values.school_state = value;
         break;
-      case "School Pin Code *":
+      case "School Pin Code":
         // console.log(value)
         formik.values.school_pin = value;
         break;
       // step 3
-      case "school_state":
+      case "select_state":
         // console.log(value);
-        setStateId(value.id);
+        formik.values.state = value.fk_state_id;
+        setValues({ stateId: value.fk_state_id });
+        getCityByState(value.fk_state_id);
         break;
       case "select_city":
         formik.values.city = value.id;
@@ -244,34 +246,13 @@ const AddSchoolTraining = () => {
       case "Enter Pin Code *":
         formik.values.pin_code = value;
         break;
-      case "select_state_training":
-        // console.log(value.id)
-        formik.values.school_state = value.id;
-        // console.log(formik.values.school_state);
-        getCity(value.id);
-        break;
-      case "Enter CK School Code":
-        setCkSchoolCode(value)
-        // console.log(value)
-        break
-      case "select_city_training":
-        // console.log(value);
-        formik.values.school_city = value.id;
-        // console.log(formik.values.school_city);
-        // getCity(value.id)
-        break;
-      case "select_school_type":
-        console.log(value.type);
-        setSchoolType(value.type);
-        // formik.values.school_city = value.id;
-        // console.log(formik.values.school_city);
-        // getCity(value.id)
-        break;
       default:
         break;
     }
     // console.log(formik.values)
   };
+
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     const getBoards = async () => {
@@ -296,32 +277,18 @@ const AddSchoolTraining = () => {
     };
     const getState = async () => {
       const state = await instance({
-        url: "location/state/stateswithcode/get",
+        url: "location/state/get/states",
         method: "GET",
         headers: {
           Authorization: Cookies.get("accessToken"),
         },
       });
-      // console.log(state.data.message);
       setState(state.data.message);
     };
     getBoards();
     getCategory();
     getState();
   }, []);
-
-  const getCity = async (id) => {
-    // console.log(id);
-    const city = await instance({
-      url: `location/city/${id}`,
-      method: "GET",
-      headers: {
-        Authorization: Cookies.get("accessToken"),
-      },
-    });
-    // console.log(city.data.message);
-    setCity(city.data.message);
-  };
 
   const navInfo = {
     title: "Add New School",
@@ -333,20 +300,18 @@ const AddSchoolTraining = () => {
     sidebarRef.current.openSidebar();
   };
 
-  // const getCityByState = async (id) => {
-  //   setLoading(true);
-  //   const city = await instance({
-  //     url: `location/city/${id}`,
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: Cookies.get("accessToken"),
-  //     },
-  //   });
-  //   setCity(city.data.message);
-  //   setLoading(false);
-  // };
-
-  const navigate = useNavigate();
+  const getCityByState = async (id) => {
+    setLoading(true);
+    const city = await instance({
+      url: `location/city/${id}`,
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("accessToken"),
+      },
+    });
+    setCity(city.data.message);
+    setLoading(false);
+  };
 
   useEffect(() => {
     const handleWidth = () => {
@@ -366,7 +331,8 @@ const AddSchoolTraining = () => {
   }, []);
 
   const addNewSchool = async () => {
-    let newData = {
+    let dataToUpdate = {
+        
       schoolContanct: [
         {
           category: "signatory",
@@ -376,58 +342,65 @@ const AddSchoolTraining = () => {
         },
       ],
     };
-    newData.ckCode = ckSchoolCode
-    newData.school_name = formik.values.school_name;
-    newData.state = formik.values.school_state;
-    newData.city = formik.values.school_city;
-    newData.pin = formik.values.school_pin;
-    newData.address = formik.values.school_address;
-    newData.school_type = schoolType;
-    newData.schoolContanct[0].pName = formik.values.school_signatory_name;
-    newData.schoolContanct[0].pEmail = formik.values.school_signatory_email;
-    newData.schoolContanct[0].pPhone = formik.values.school_signatory_mobile;
-    newData.schoolContanct[0].designation =
-      formik.values.school_signatory_designation;
-    newData.schoolContanct[1].pName = formik.values.school_service_name;
-    newData.schoolContanct[1].pEmail = formik.values.school_service_email;
-    newData.schoolContanct[1].pPhone = formik.values.school_service_mobile;
-    newData.schoolContanct[1].designation =
-      formik.values.school_service_designation;
 
-    console.log(newData)
-
+    if (formik.values.school_signatory_name.length !== 0) {
+      dataToUpdate.schoolContanct[0].pName =
+        formik.values.school_signatory_name;
+    }
+    if (formik.values.school_signatory_designation.length !== 0) {
+      dataToUpdate.schoolContanct[0].designation =
+        formik.values.school_signatory_designation;
+    }
+    if (formik.values.school_signatory_email.length !== 0) {
+      dataToUpdate.schoolContanct[0].pEmail =
+        formik.values.school_signatory_email;
+    }
+    if (formik.values.school_signatory_mobile.length !== 0) {
+      dataToUpdate.schoolContanct[0].pPhone =
+        formik.values.school_signatory_mobile;
+    }
+    if (formik.values.school_service_name.length !== 0) {
+      dataToUpdate.schoolContanct[1].pName = formik.values.school_service_name;
+    }
+    if (formik.values.school_service_designation.length !== 0) {
+      dataToUpdate.schoolContanct[1].designation =
+        formik.values.school_service_designation;
+    }
+    if (formik.values.school_service_mobile.length !== 0) {
+      dataToUpdate.schoolContanct[1].pPhone =
+        formik.values.school_service_mobile;
+    }
+    if (formik.values.school_service_email.length !== 0) {
+      dataToUpdate.schoolContanct[1].pEmail =
+        formik.values.school_service_email;
+    }
+    if (formik.values.school_address.length !== 0) {
+      dataToUpdate.address = formik.values.school_address;
+    }
+    if (formik.values.school_pin.length !== 0) {
+      dataToUpdate.pin = formik.values.school_pin;
+    }
+    // console.log(dataToUpdate);
+    console.log(stid)
+    console.log(scid)
     const res = await instance({
-      url: `school/create/ckschool`,
-      method: "POST",
-      data: newData,
+      url: `school/update/ckschool/${scid}/${stid}`,
+      method: "PUT",
+      data: dataToUpdate,
       headers: {
         Authorization: Cookies.get("accessToken"),
       },
     });
-    console.log(res);
+    // console.log(res.data.status);
     if (res.data.status === "success") {
-      // console.log(res);
-      setSnackbarErrStatus(false);
-      setErrMessage("New School Added");
+      console.log(res);
+      setSnackbarErrStatus(false)
+      setErrMessage("School Updated Successfully");
       snackbarRef.current.openSnackbar();
       setTimeout(() => {
         navigate("/manageSchoolTraining");
       }, 1000);
     }
-
-    // console.log(formik.values.school_signatory_name);
-    // console.log(formik.values.school_signatory_designation);
-    // console.log(formik.values.school_signatory_mobile);
-    // console.log(formik.values.school_signatory_email);
-    // console.log(formik.values.school_service_name);
-    // console.log(formik.values.school_service_designation);
-    // console.log(formik.values.school_service_mobile);
-    // console.log(formik.values.school_service_email);
-    // console.log(formik.values.school_name);
-    // console.log(formik.values.school_address);
-    // console.log(formik.values.school_city);
-    // console.log(formik.values.school_state);
-    // console.log(formik.values.school_pin);
   };
 
   return (
@@ -471,7 +444,7 @@ const AddSchoolTraining = () => {
 
           <div className="min-h-[90vh] relative flex w-full justify-center items-start gap-4 bg-[#141728]">
             <h1 className="text-gray-100 md:text-2xl text-base font-semibold absolute top-[2rem] left-[2rem]">
-              Add New School
+              Update School
             </h1>
             <div className="w-full flex flex-col gap-4 items-center mt-[7rem]">
               <CustomizedSteppers
@@ -480,106 +453,28 @@ const AddSchoolTraining = () => {
                   "",
                   "",
                   "",
-                  "",
                 ]}
               />
-              {/* step 1 */}
-              {steps.step1 ? (
-                <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
-                  <h3 className="text-white">Basic Details</h3>
-                  <div className="grid sm:grid-rows-2 sm:grid-cols-2 grid-rows-4 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
-                    <BasicTextFields
-                      lable={"Enter School Name *"}
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      variant={"standard"}
-                      multiline={false}
-                    />
-                    {/* <BasicTextFields
-                      lable={"Enter Affiliate Code"}
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      variant={"standard"}
-                      multiline={false}
-                    /> */}
-
-                    <SearchDropDown
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      Name={"select_school_type"}
-                      label={"School Type *"}
-                      required={true}
-                      data={[{ type: "New Business" }, { type: "Renewal" }]}
-                      color={"rgb(243, 244, 246)"}
-                    />
-
-                    {schoolType === "Renewal" ? 
-                    <BasicTextFields
-                      lable={"Enter CK School Code"}
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      variant={"standard"}
-                      multiline={false}
-                    />
-                    :
-                    ""
-                  }
-                    {/* <SearchDropDown
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      Name={"category_addschool"}
-                      Initialvalue={formik.values.category}
-                      data={category}
-                      label={"Select Category *"}
-                      color={"rgb(243, 244, 246)"}
-                    /> */}
-                  </div>
-                  <div
-                    className="mt-3"
-                    onClick={() => {
-                      if (
-                        schoolType &&
-                        // formik.values.category &&
-                        // formik.values.board &&
-                        formik.values.school_name
-                      ) {
-                        setSteps({
-                          step1: false,
-                          step2: true,
-                          step3: false,
-                          step4: false,
-                        });
-                        window.scroll({
-                          top: 0,
-                          behavior: "smooth",
-                        });
-                      } else {
-                        setSnackbarErrStatus(true);
-                        setErrMessage("Please Enter All the Fields");
-                        snackbarRef.current.openSnackbar();
-                      }
-                    }}
-                  >
-                    <BasicButton text={"Next"} />
-                  </div>
-                </div>
-              ) : null}
               {/* step 2 */}
               {steps.step2 ? (
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
-                  <h3 className="text-white">Signatory Contact Details</h3>
+                <h3 className="text-white">Signatory Contact Details</h3>
                   <div className="grid sm:grid-rows-2 sm:grid-cols-3 grid-rows-5 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
                     {/* <h3>School Signatory</h3> */}
-                    
                     <BasicTextFields
-                      lable={"School Signatory Full Name *"}
+                      lable={"School Signatory Full Name"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     />
                     <BasicTextFields
-                      lable={"School Signatory Designation *"}
+                      lable={"School Signatory Designation"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     />
                     <BasicTextFields
-                      lable={"School Signatory Mobile Number *"}
+                      lable={"School Signatory Mobile Number"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       type={"number"}
                       variant={"standard"}
@@ -587,7 +482,7 @@ const AddSchoolTraining = () => {
                     />
 
                     <BasicTextFields
-                      lable={"School Signatory Email ID *"}
+                      lable={"School Signatory Email ID"}
                       variant={"standard"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       multiline={false}
@@ -603,27 +498,25 @@ const AddSchoolTraining = () => {
                   <div
                     onClick={() => {
                       if (
-                        formik.values.school_signatory_name &&
-                        formik.values.school_signatory_designation &&
-                        formik.values.school_signatory_mobile &&
-                        formik.values.school_signatory_email
+                        // formik.values.name &&
+                        // formik.values.email &&
+                        // formik.values.phone &&
+                        // formik.values.web &&
+                        // formik.values.designation
+                        true
                       ) {
-                        setSteps({
-                          step1: false,
-                          step2: false,
-                          step3: true,
-                          step4: false,
-                        });
+                        setSteps({ step2: false, step3: true, step4: false });
                         window.scroll({
                           top: 0,
                           behavior: "smooth",
                         });
                       } else {
                         setSnackbarErrStatus(true);
-                        setErrMessage("Please Enter All the Fields");
+                        setErrMessage("Please Fill All The Fields");
                         snackbarRef.current.openSnackbar();
                       }
                     }}
+                    className="mt-3"
                   >
                     <BasicButton text={"Next"} />
                   </div>
@@ -632,24 +525,23 @@ const AddSchoolTraining = () => {
 
               {steps.step3 ? (
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
-                  <h3 className="text-white">Service Person Contact Details</h3>
+                <h3 className="text-white">Service Person Contact Details</h3>
                   <div className="grid sm:grid-rows-2 sm:grid-cols-3 grid-rows-5 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
                     {/* <h3>School Signatory</h3> */}
-                    
                     <BasicTextFields
-                      lable={"School Service Person Full Name *"}
+                      lable={"School Service Person Full Name"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     />
                     <BasicTextFields
-                      lable={"School Service Person Designation *"}
+                      lable={"School Service Person Designation"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     />
                     <BasicTextFields
-                      lable={"School Service Person Mobile Number *"}
+                      lable={"School Service Person Mobile Number"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       type={"number"}
                       variant={"standard"}
@@ -657,7 +549,7 @@ const AddSchoolTraining = () => {
                     />
 
                     <BasicTextFields
-                      lable={"School Service Person Email ID *"}
+                      lable={"School Service Person Email ID"}
                       variant={"standard"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       multiline={false}
@@ -673,27 +565,25 @@ const AddSchoolTraining = () => {
                   <div
                     onClick={() => {
                       if (
-                        formik.values.school_service_name &&
-                        formik.values.school_service_designation &&
-                        formik.values.school_service_mobile &&
-                        formik.values.school_service_email
+                        // formik.values.name &&
+                        // formik.values.email &&
+                        // formik.values.phone &&
+                        // formik.values.web &&
+                        // formik.values.designation
+                        true
                       ) {
-                        setSteps({
-                          step1: false,
-                          step2: false,
-                          step3: false,
-                          step4: true,
-                        });
+                        setSteps({ step2: false, step3: false, step4: true });
                         window.scroll({
                           top: 0,
                           behavior: "smooth",
                         });
                       } else {
                         setSnackbarErrStatus(true);
-                        setErrMessage("Please Enter All the Fields");
+                        setErrMessage("Please Fill All The Fields");
                         snackbarRef.current.openSnackbar();
                       }
                     }}
+                    className="mt-3"
                   >
                     <BasicButton text={"Next"} />
                   </div>
@@ -703,9 +593,8 @@ const AddSchoolTraining = () => {
               {/* step 4 */}
               {steps.step4 ? (
                 <div className="flex flex-col gap-4 items-start w-[90%] px-6 bg-slate-600 rounded-md py-6 mb-[5rem]">
-                  <h3 className="text-white">Address Details</h3>
+                <h3 className="text-white">Address Details</h3>
                   <div className="grid sm:grid-rows-2 sm:grid-cols-3 grid-rows-4 grid-cols-1 w-full mt-6 gap-6 rounded-md bg-slate-600">
-                  
                     {/* <SearchDropDown
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       label={"School Full Name *"}
@@ -729,41 +618,25 @@ const AddSchoolTraining = () => {
                     /> */}
 
                     <BasicTextFields
-                      lable={"School Address *"}
+                      lable={"School Address"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     />
                     {/* <BasicTextFields
-                      lable={"School State *"}
+                      lable={"School City"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     /> */}
-                    <SearchDropDown
-                      label={"School State *"}
-                      // seriesId={""}
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      data={state}
-                      multiple={false}
-                      Name={"select_state_training"}
-                    />
                     {/* <BasicTextFields
-                      lable={"School City *"}
+                      lable={"School State"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       multiline={false}
                     /> */}
-                    <SearchDropDown
-                      label={"School City *"}
-                      // disabled={false}
-                      handleOrderProcessingForm={handleOrderProcessingForm}
-                      data={city}
-                      multiple={false}
-                      Name={"select_city_training"}
-                    />
                     <BasicTextFields
-                      lable={"School Pin Code *"}
+                      lable={"School Pin Code"}
                       handleOrderProcessingForm={handleOrderProcessingForm}
                       variant={"standard"}
                       type={"number"}
@@ -798,7 +671,7 @@ const AddSchoolTraining = () => {
                       // }
                     }
                   >
-                    <BasicButton text={"Add School"} />
+                    <BasicButton text={"Update School"} />
                   </div>
                 </div>
               ) : null}
@@ -810,4 +683,4 @@ const AddSchoolTraining = () => {
   );
 };
 
-export default AddSchoolTraining;
+export default UpdateSchoolTrainingEU;

@@ -89,14 +89,14 @@ const Login = () => {
       
       dispatch(authActions.login());
 
-      if(res.data.type === "user" && res.data.company === "Euphues"){
+      if(res.data.type === "training" && res.data.company === "Euphues"){
         navigate("/manageSchoolTraining");
         console.log("testing1")
       }
-      else if(res.data.type === "training" && res.data.company === "Classklap"){
-        navigate("/ck_dashboard");
-        console.log("testing2")
-      }
+      // else if(res.data.type === "training" && res.data.company === "Classklap"){
+      //   navigate("/ck_dashboard");
+      //   console.log("testing2")
+      // }
       // else if(res.data.company === "Euphues"){
         // navigate("/ck_dashboard");
         // console.log("testing2")

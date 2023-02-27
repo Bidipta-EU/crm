@@ -14,7 +14,10 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../Store/auth";
 import Cookies from "js-cookie";
 import { Collapse } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 const Navbar = ({ handleSidebarCollapsed, info }) => {
+  const navigate = useNavigate();
   const [scroll, setScroll] = useState(false);
   const [showUserOption, setShowUserOption] = useState(false);
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
@@ -51,6 +54,7 @@ const Navbar = ({ handleSidebarCollapsed, info }) => {
     Cookies.remove("user");
     Cookies.remove("company");
     dispatch(authActions.logout());
+    navigate("/");
   };
 
   return (

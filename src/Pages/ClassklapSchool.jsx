@@ -250,15 +250,15 @@ const ClassklapSchool = () => {
   const dialogRef = useRef();
 
   const handleInvoiceView = (invceId) => {
-    console.log(invceId)
+    // console.log(invceId)
     setInvceId(invceId)
-    // setLoading(true)
+    setLoading(true)
     // setInvoiceId2(invceId);
-    // setTimeout(() => {
+    setTimeout(() => {
     //   // console.log("Delayed for 1 second.");
       openDialogue3();
-    //   setLoading(false)
-    // }, 1000)
+      setLoading(false)
+    }, 1000)
     // openDialogue2();
   };
 

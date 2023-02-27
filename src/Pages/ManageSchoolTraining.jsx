@@ -160,13 +160,13 @@ const ManageSchoolTraining = () => {
         // getSchoolByState(value.fk_state_id);
         // setStateAndCity({ ...stateAndCity, state: value.fk_state_id });
         break;
-        case "select_state_training":
-          // console.log(value);
-          setStateId(value.id);
-          // getCity(value.fk_state_id);
-          // getSchoolByState(value.fk_state_id);
-          // setStateAndCity({ ...stateAndCity, state: value.fk_state_id });
-          break;
+      case "select_state_training":
+        // console.log(value);
+        setStateId(value.id);
+        // getCity(value.fk_state_id);
+        // getSchoolByState(value.fk_state_id);
+        // setStateAndCity({ ...stateAndCity, state: value.fk_state_id });
+        break;
       case "select_type":
         // console.log(value);
         setType(value.types);
@@ -199,7 +199,7 @@ const ManageSchoolTraining = () => {
           Authorization: `${Cookies.get("accessToken")}`,
         },
       });
-      console.log(res.data.message);
+      // console.log(res.data.message);
       setStates(res.data.message);
     };
 
@@ -231,7 +231,7 @@ const ManageSchoolTraining = () => {
     setSchoolRow([]);
     setSearchRow([]);
     if (type === "Classklap") {
-      console.log(stateId)
+      console.log(stateId);
       const res = await instance({
         url: `school/ckschools/get/${stateId}`,
         method: "GET",
@@ -240,8 +240,8 @@ const ManageSchoolTraining = () => {
         },
       });
       // console.log(res.data.message);
-      if(res.data.message.length === 0){
-        alert("No Data Available")
+      if (res.data.message.length === 0) {
+        alert("No Data Available");
       }
       setSchoolRow(res.data.message);
       // console.log(stateId)
@@ -254,9 +254,9 @@ const ManageSchoolTraining = () => {
           Authorization: `${Cookies.get("accessToken")}`,
         },
       });
-      // console.log(res.data.message);
-      if(res.data.message.length === 0){
-        alert("No Data Available")
+      console.log(res.data.message);
+      if (res.data.message.length === 0) {
+        alert("No Data Available");
       }
       setSchoolRow(res.data.message);
       // console.log(stateId)
@@ -270,8 +270,8 @@ const ManageSchoolTraining = () => {
         },
       });
       // console.log(res.data.message);
-      if(res.data.message.length === 0){
-        alert("No Data Available")
+      if (res.data.message.length === 0) {
+        alert("No Data Available");
       }
       setSchoolRow(res.data.message);
       // console.log(stateId)
@@ -306,7 +306,7 @@ const ManageSchoolTraining = () => {
   const filterTable = () => {
     // console.log(searchVal);
     // console.log(schoolRow)
-    setPage(0)
+    setPage(0);
     let tempArr = [];
     for (let ele of schoolRow) {
       // console.log(ele.cardname)
@@ -343,6 +343,7 @@ const ManageSchoolTraining = () => {
       // console.log(searchRow)
     } else {
       // console.log("second")
+      // console.log(tempArr)
       setSearchRow(tempArr);
       // console.log(searchRow)
     }
@@ -474,7 +475,11 @@ const ManageSchoolTraining = () => {
                         { label: "All", value: -1 },
                       ]}
                       colSpan={3}
-                      count={searchRow.length=== 0 ?schoolRow.length: searchRow.length}
+                      count={
+                        searchRow.length === 0
+                          ? schoolRow.length
+                          : searchRow.length
+                      }
                       rowsPerPage={rowsPerPage}
                       page={page}
                       slotProps={{
@@ -549,27 +554,34 @@ const ManageSchoolTraining = () => {
                                 </TableCell>
                               ) : (
                                 <TableCell align="center">
-                                  <div
+                                  N/A
+                                  {/* <div
                                     className="sm:w-auto w-[50vw]"
                                     onClick={() => {
                                       updateSchoolCode(row.id, stateId);
                                     }}
                                   >
                                     <BasicButton text={"Get Code"} />
-                                  </div>
+                                  </div> */}
                                 </TableCell>
                               )}
                               <TableCell align="center">
                                 {type === "Classklap" ? (
                                   <div className="w-full flex gap-3 justify-end">
                                     <Link
-                                      to={`/update_school_training/${row.id}`}
+                                      to={`/update_school_training/${row.id}/${row.ck_code}`}
                                     >
                                       <BasicButton text={"Edit"} />
                                     </Link>
                                   </div>
                                 ) : (
-                                  ""
+                                  <div className="w-full flex gap-3 justify-end">
+                                    <Link
+                                      to={`/update_school_training_eu/${row.id}/${stateId}`}
+                                    >
+                                      <BasicButton text={"Edit"} />
+                                    </Link>
+                                  </div>
                                 )}
                               </TableCell>
                             </TableRow>
@@ -606,11 +618,11 @@ const ManageSchoolTraining = () => {
                                 <TableCell align="center">
                                   {row.ck_code}
                                   {/* <div
-                            className="sm:w-auto w-[50vw]"
-                            onClick={""}
-                          >
-                            <BasicButton text={"Get Code"} />
-                          </div> */}
+                                      className="sm:w-auto w-[50vw]"
+                                        onClick={""}
+                                        >
+                                        <BasicButton text={"Get Code"} />
+                                        </div> */}
                                 </TableCell>
                               ) : (
                                 <TableCell align="center">
@@ -632,7 +644,7 @@ const ManageSchoolTraining = () => {
                                 {type === "Classklap" ? (
                                   <div className="w-full flex gap-3 justify-end">
                                     <Link
-                                      to={`/update_school_training/${row.id}`}
+                                      to={`/update_school_training/${row.id}/${row.ck_code}`}
                                     >
                                       <BasicButton text={"Edit"} />
                                     </Link>
