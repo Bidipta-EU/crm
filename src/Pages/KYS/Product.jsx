@@ -5,7 +5,6 @@ import Sidebar from "../../Components/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
 import SwipeableTemporaryDrawer from "../../Components/Material/MaterialSidebar";
 import BasicButton from "../../Components/Material/Button";
-import SearchDropDown from "../../Components/SearchDropDown";
 import instance from "../../Instance";
 import Cookies from "js-cookie";
 import { Backdrop, Button, CircularProgress, Toolbar } from "@mui/material";
@@ -20,8 +19,6 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TablePagination from "@mui/material/TablePagination";
-import DialogSlide2 from "../../Components/Material/Dialog4";
-import Loader from "../../Components/Loader";
 
 const Products = (props) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -43,14 +40,12 @@ const Products = (props) => {
 
   useLayoutEffect(() => {
     getProduct();
-    // getState();
   }, []);
 
   const getProduct = async () => {
     console.log("product id", id);
 
     const res = await instance({
-      // url: `/school/kys/product/get/${id}`,
       url: `/school/kys/product/get/${id}`,
       method: "GET",
       headers: {
@@ -61,11 +56,21 @@ const Products = (props) => {
     let data = res.data.message;
     setRowdata(res.data.message);
     setLoading(false);
-    if (data.length === 0) {
-      alert("No product found");
-    }
-  };
 
+    //   for (let i = 0; i < data.length; i++) {
+    //     let obj = {};
+    //     obj.index = i;
+    //     let tempArr1 = [];
+    //     for (let obj of data[i].school_products_items) {
+    //       tempArr1.push(obj.fk_product.item_name);
+    //     }
+    //     obj.data = tempArr1;
+    //     arr.push(obj);
+    //   }
+    //   setfkData(arr);
+    //   console.log(fkData);
+    // };
+  };
   const navInfo = {
     title: "Products",
     details: ["Home", "/Products"],
@@ -92,8 +97,6 @@ const Products = (props) => {
   };
 
   const filterTable = () => {
-    // console.log(searchVal);
-    // console.log(rowdata)
     setPage(0);
     let tempArr = [];
     for (let ele of rowdata) {
@@ -101,12 +104,11 @@ const Products = (props) => {
       let category = ele.category.toLowerCase();
       let productItem =
         ele.school_products_items[0].fk_product.item_name.toLowerCase();
-      // let email = ele.email.toLowerCase();
+
       if (
         subject.indexOf(searchVal.toLowerCase()) > -1 ||
         category.indexOf(searchVal.toLowerCase()) > -1 ||
         productItem.indexOf(searchVal.toLowerCase()) > -1
-        // email.indexOf(searchVal.toLowerCase()) > -1
       ) {
         tempArr.push(ele);
       }
@@ -173,22 +175,22 @@ const Products = (props) => {
             <div className="text-gray-100 w-full md:text-2xl flex justify-between sm:px-12 px-8 items-center text-base font-semibold absolute mt-[2rem]">
               <h1 className="text-gray-100 text-lg">Product</h1>
 
-              {/* {rowdata.length === 0 ? null : (
-                <>
-                  <Button variant="contained">{buttonData[0]}</Button>
-                  <Button variant="contained">{buttonData[1]}</Button>
-                </>
-              )} */}
-
               <div onClick={() => navigate(`/kys/products/add_product/${id}`)}>
                 <BasicButton text={"Add Product"} />
               </div>
             </div>
 
             <div className="w-full flex flex-col text-gray-100 gap-4 items-center mt-[7rem]">
-              <Paper className="mt-5">
-                {rowdata.length === 0 ? null : ( // </div> //   "No product Found" // <div className="text-white bg-[#141728]">
-                  <TableContainer component={Paper}>
+              <Paper className="mt-5 !w-[90%]">
+                {rowdata.length === 0 ? (
+                  <div className="flex justify-center bg-[#141728]  text-gray-100">
+                    No Product added
+                  </div>
+                ) : (
+                  <TableContainer
+                    component={Paper}
+                    // className="!w-1/2 lg:!w-[95%]"
+                  >
                     <Toolbar className="bg-slate-400">
                       <TextField
                         id="search-bar"
@@ -240,7 +242,10 @@ const Products = (props) => {
                       />
                     </Toolbar>
 
-                    <Table sx={{ minWidth: 650 }} aria-label="customized table">
+                    <Table
+                      // sx={{ minWidth: 1050 }}
+                      aria-label="customized table"
+                    >
                       <TableHead className="bg-slate-500">
                         <TableRow>
                           <TableCell className="!w-[10rem]" align="center">
@@ -260,18 +265,6 @@ const Products = (props) => {
                           <TableCell className="!w-[10rem]" align="center">
                             School Product Items
                           </TableCell>
-                          {/* <TableCell className="!w-[8rem]" align="center">
-                          Status
-                        </TableCell>
-                        <TableCell className="!w-[8rem]" align="center">
-                          View
-                        </TableCell> */}
-                          {/* <TableCell className="!w-[8rem]" align="center">
-                        Edit
-                      </TableCell> */}
-                          {/* <TableCell className="!w-[8rem]" align="center">
-                          Verify
-                        </TableCell> */}
                         </TableRow>
                       </TableHead>
                       <TableBody className="bg-slate-200">
@@ -303,49 +296,19 @@ const Products = (props) => {
                                 <TableCell align="center">
                                   {row.fk_sery.series}
                                 </TableCell>
-                                {/* {fkData.map((data, index) => {
-                                console.log("hi", index);
-                                console.log("hello", data.index);
-                                if (data.index === index) { */}
-                                <TableCell align="center">
-                                  <TableRow>
-                                    {
-                                      row.school_products_items[0].fk_product
-                                        .item_name
-                                    }
-                                  </TableRow>
-                                  <TableRow>
-                                    {" "}
-                                    {row?.school_products_items[1]
-                                      ? row.school_products_items[1].fk_product
-                                          .item_name
-                                      : null}
-                                  </TableRow>
+
+                                <TableCell>
+                                  {row.school_products_items.map((item, i) => (
+                                    <TableRow>
+                                      {" "}
+                                      {item ? (
+                                        <div>
+                                          {i + 1}. {item.fk_product.item_name}
+                                        </div>
+                                      ) : null}
+                                    </TableRow>
+                                  ))}
                                 </TableCell>
-                                ;{/* <TableCell align="center"> */}
-                                {/* <DialogSlide2 ref={dialogRef2}/> */}
-                                {/* <div
-                                  className="sm:w-auto w-[50vw]"
-                                  onClick={() => {
-                                    handleAofView(row.id);
-                                    handleAofPDFEdit(row.id);
-                                  }}
-                                >
-                                  <BasicButton text={"Edit"} />
-                                </div>
-                            </TableCell> */}
-                                {/* <TableCell align="center"> */}
-                                {/* <DialogSlide2 ref={dialogRef2}/> */}
-                                {/* <div
-                                  className="sm:w-auto w-[50vw]"
-                                  onClick={() => {
-                                    // handleAofPDF(row.id);
-                                    console.log("hiii");
-                                  }}
-                                > */}
-                                {/* <BasicButton text={"VERIFY"} />
-                                </div>
-                              </TableCell> */}
                               </TableRow>
                             ))
                           : (rowsPerPage > 0
@@ -363,9 +326,6 @@ const Products = (props) => {
                                   },
                                 }}
                               >
-                                {/* <TableCell align="center" component="th" scope="row">
-                          {row.id}
-                        </TableCell> */}
                                 <TableCell align="center">
                                   {row.category}
                                 </TableCell>
@@ -381,35 +341,17 @@ const Products = (props) => {
                                 </TableCell>
 
                                 <TableCell align="center">
-                                  <TableRow>
-                                    {
-                                      row.school_products_items[0].fk_product
-                                        .item_name
-                                    }
-                                  </TableRow>
-                                  <TableRow>
-                                    {" "}
-                                    {row?.school_products_items[1]
-                                      ? row.school_products_items[1].fk_product
-                                          .item_name
-                                      : null}
-                                  </TableRow>
+                                  {row.school_products_items.map((item, i) => (
+                                    <TableRow>
+                                      {" "}
+                                      {item ? (
+                                        <div>
+                                          {i + 1}. {item.fk_product.item_name}
+                                        </div>
+                                      ) : null}
+                                    </TableRow>
+                                  ))}
                                 </TableCell>
-
-                                {/* <TableCell align="center"> */}
-                                {/* {row.id ? (
-                                  <div
-                                    className="sm:w-auto w-[50vw]"
-                                    onClick={() => {
-                                      handleInvoiceView(row.id);
-                                    }}
-                                  >
-                                    <BasicButton text={"View"} />
-                                  </div>
-                                ) : (
-                                  ""
-                                )} */}
-                                {/* </TableCell> */}
                               </TableRow>
                             ))}
                         <TableRow></TableRow>

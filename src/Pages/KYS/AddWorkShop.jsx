@@ -123,7 +123,7 @@ const AddWorkShop = () => {
             // behavior: "smooth",
           });
           setTimeout(() => {
-            window.location.reload();
+            window.location.replace(`/kys/workshop/${id}`);
           }, 100);
         }, 1500);
       } else {

@@ -184,11 +184,11 @@ const Competition = () => {
             </div>
 
             <div className="w-full flex flex-col text-gray-100 gap-4 items-center mt-[7rem]  ">
-              <Paper className="mt-5">
+              <Paper className="mt-5 !w-[90%]">
                 {rowdata.length > 0 ? ( //   "No product Found" // <div className="text-white bg-[#141728]">
                   // </div>
                   <TableContainer component={Paper}>
-                    <Toolbar className="bg-slate-400">
+                    <Toolbar className="bg-slate-400 !w-full">
                       <TextField
                         id="search-bar"
                         className="text"
@@ -418,7 +418,7 @@ const Competition = () => {
                     </Table>
                   </TableContainer>
                 ) : (
-                  <div className="bg-[#141728]  text-gray-100">
+                  <div className="flex justify-center bg-[#141728]  text-gray-100 ">
                     No Competition added
                   </div>
                 )}
